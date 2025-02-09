@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors Game</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .choices {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .choice {
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.2s;
+    }
+    .choice:hover {
+      transform: scale(1.1);
+    }
+    .choice img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border: 2px solid #3498db;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .result, .computer-choice, .score {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .options {
+      margin-top: 20px;
+    }
+    .options button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+    .options button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Rock Paper Scissors Game</h1>
+  <div class="game-container">
+    <div class="options">
+      <h4>Choose a Game Mode:</h4>
+      <button onclick="startGame('firstTo3')">First to 3 Points</button>
+      <button onclick="startGame('bestOf3')">Best of 3 Rounds</button>
+      <button onclick="startGame('bestOf5')">Best of 5 Rounds</button>
+    </div>
+    <div class="choices" style="display: none;">
+      <!-- Rock -->
+      <button class="choice" onclick="playGame('rock')">
+        <img src="Rock.png" alt="Rock">
+      </button>
+      <!-- Scissors -->
+      <button class="choice" onclick="playGame('scissors')">
+        <img src="Scissors.png" alt="Scissors">
+      </button>
+      <!-- Paper -->
+      <button class="choice" onclick="playGame('paper')">
+        <img src="Paper.png" alt="Paper">
+      </button>
+    </div>
+    <div id="result" class="result"></div>
+    <div id="computerChoice" class="computer-choice"></div>
+    <div id="score" class="score"></div>
+  </div>
+
+  <script>
+    let playerScore = 0;
+    let computerScore = 0;
+    let roundsPlayed = 0;
+    let gameMode = "";
+
+    function startGame(mode) {
+      gameMode = mode;
+      playerScore = 0;
+      computerScore = 0;
+      roundsPlayed = 0;
+      document.querySelector('.choices').style.display = 'flex';
+      document.getElementById('result').innerText = "";
+      document.getElementById('computerChoice').innerText = "";
+      document.getElementById('score').innerText = "Player: 0 | Computer: 0";
+    }
+
+    function playGame(playerChoice) {
+      const choices = ['rock', 'paper', 'scissors'];
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+      let resultText = "";
+
+      if (playerChoice === computerChoice) {
+        resultText = "It's a tie!";
+      } else if (
+        (playerChoice === 'rock' && computerChoice === 'scissors') ||
+        (playerChoice === 'scissors' && computerChoice === 'paper') ||
+        (playerChoice === 'paper' && computerChoice === 'rock')
+      ) {
+        resultText = "You win!";
+        playerScore++;
+      } else {
+        resultText = "Computer wins!";
+        computerScore++;
+      }
+
+      roundsPlayed++;
+      document.getElementById('result').innerText = resultText;
+      document.getElementById('computerChoice').innerText = `Computer chose ${computerChoice}`;
+      document.getElementById('score').innerText = `Player: ${playerScore} | Computer: ${computerScore}`;
+
+      checkGameEnd();
+    }
+
+    function checkGameEnd() {
+      if (gameMode === 'firstTo3') {
+        if (playerScore === 3) {
+          alert("You won the game! First to 3 points.");
+          resetGame();
+        } else if (computerScore === 3) {
+          alert("Computer won the game! First to 3 points.");
+          resetGame();
+        }
+      } else if (gameMode === 'bestOf3' && roundsPlayed === 3) {
+        determineWinner("Best of 3");
+      } else if (gameMode === 'bestOf5' && roundsPlayed === 5) {
+        determineWinner("Best of 5");
+      }
+    }
+
+    function determineWinner(mode) {
+      if (playerScore > computerScore) {
+        alert(`You won the game! ${mode}.`);
+      } else if (computerScore > playerScore) {
+        alert(`Computer won the game! ${mode}.`);
+      } else {
+        alert(`It's a tie! ${mode}.`);
+      }
+      resetGame();
+    }
+
+    function resetGame() {
+      playerScore = 0;
+      computerScore = 0;
+      roundsPlayed = 0;
+      document.querySelector('.choices').style.display = 'none';
+      document.getElementById('result').innerText = "";
+      document.getElementById('computerChoice').innerText = "";
+      document.getElementById('score').innerText = "";
+    }
+  </script>
+
+</body>
+</html>
